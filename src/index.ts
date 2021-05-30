@@ -2,7 +2,8 @@ import { gql, GraphQLClient } from 'graphql-request';
 import star from "url:./assets/star-24.svg";
 import fork from "url:./assets/repo-forked-24.svg";
 import license from "url:./assets/law-16.svg";
-
+import dotenv from 'dotenv';
+dotenv.config();
 //~
 
 interface UserData {
@@ -58,11 +59,11 @@ interface RepositoriesData {
 		};
 	};
 }
-
+console.log(process.env.GITHUB_PERSONAL_ACCESS_TOKEN);
 const endpoint = "https://api.github.com/graphql";
 const client = new GraphQLClient(endpoint, {
 	headers: {
-		authorization: "Bearer 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",
+		authorization: `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
 	},
 });
 
@@ -247,8 +248,8 @@ const index = async () =>{
 				dropdown.classList.toggle('hide');
 			}
 		});
-		/*const submitBtn = document.querySelector('.start_box-button');
-		submitBtn?.addEventListener('click' async ()=>{
+		const submitBtn = document.querySelector('.start_box-button');
+		submitBtn?.addEventListener('click', async ()=>{
 			submitBtn.classList.add('start_box-button-inactive');
 			submitBtn.setAttribute('diabled', 'true');
 			const usernameInput: HTMLInputElement| null = document.querySelector('.username_input');
@@ -267,7 +268,7 @@ const index = async () =>{
 				console.log(userData);
 				if(userData.search.userCount > 0){
 					await mainFunc(usernameInput.value);
-					setTimeout(()=>{*/
+					setTimeout(async ()=>{
 						await mainFunc('otagera');
 						const start = document.querySelector('.start');
 						if(start){
@@ -279,7 +280,7 @@ const index = async () =>{
 							main.classList.add('show');
 							main.classList.remove('hide');
 						}
-					/*}, 2000);
+					}, 2000);
 				}else{
 					const startError = document.querySelector('.start_error');
 					if(startError){
@@ -296,7 +297,7 @@ const index = async () =>{
 				}
 				// disabled="true"
 			}
-		});*/
+		});
 	}catch(error){
 		console.error(error);
 	}
