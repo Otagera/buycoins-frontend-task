@@ -253,7 +253,9 @@ const index = async () =>{
 			submitBtn.classList.add('start_box-button-inactive');
 			submitBtn.setAttribute('diabled', 'true');
 			const usernameInput: HTMLInputElement| null = document.querySelector('.username_input');
+				console.log(userData);
 			if(usernameInput && usernameInput.value){
+				console.log(usernameInput.value);
 				const userQuery = gql`
 					query searchUser($login: String!){
 						search(query: $login, type: USER) {
