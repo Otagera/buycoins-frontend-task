@@ -188,7 +188,7 @@ const mainFunc = async (login: string) => {
 			login: login.trim()
 		}
 
-		const userData = await client.request<UserData>(userQuery, variables);
+		const userData: UserData = await client.request(userQuery, variables);
 		//console.log(userData);
 		const userImg: HTMLImageElement | null = document.querySelector(
 			".main-profile_img"
@@ -219,7 +219,7 @@ const mainFunc = async (login: string) => {
 			desc.innerHTML = userData.user.bio;
 		}
 
-		const repoData = await client.request<RepositoriesData>(repoQuery, variables);
+		const repoData: RepositoriesData = await client.request(repoQuery, variables);
 		const { repositories } = repoData.repositoryOwner;
 		console.log(repoData);
 		const noRepo = document.querySelector(".main-body-no-repo");
@@ -265,7 +265,7 @@ const index = async () =>{
 				const variables = {
 					login: usernameInput.value.trim()
 				}
-				const userData = await client.request<UserSearchData>(userQuery, variables);
+				const userData: UserSearchData = await client.request(userQuery, variables);
 				console.log(userData);
 				if(userData.search.userCount > 0){
 					await mainFunc(usernameInput.value);
