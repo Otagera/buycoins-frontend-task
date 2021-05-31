@@ -1,4 +1,5 @@
-import { gql, GraphQLClient } from 'graphql-request';
+import fetch from 'node-fetch';
+
 import star from "url:./assets/star-24.svg";
 import fork from "url:./assets/repo-forked-24.svg";
 import license from "url:./assets/law-16.svg";
@@ -61,11 +62,6 @@ interface RepositoriesData {
 }
 console.log(process.env.GITHUB_PERSONAL_ACCESS_TOKEN);
 const endpoint = "https://api.github.com/graphql";
-const client = new GraphQLClient(endpoint, {
-	headers: {
-		authorization: `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
-	},
-});
 
 const mainFunc = async (login: string) => {
 	try {
@@ -132,7 +128,7 @@ const mainFunc = async (login: string) => {
 							<hr class="main-body-ruler repo_ruler" />
 						</article>`;
 		};
-		const userQuery = gql`
+		const userQuery = `
 			query getUserDetails($login: String!){
 				user(login: $login) {
 					bio
@@ -142,7 +138,7 @@ const mainFunc = async (login: string) => {
 				}
 			}
 		`;
-		const repoQuery = gql`
+		const repoQuery = `
 			query getUserRepos($login: String!){
 				repositoryOwner(login: $login) {
 					repositories(
@@ -188,8 +184,20 @@ const mainFunc = async (login: string) => {
 			login: login.trim()
 		}
 
-		const userData: UserData = await client.request(userQuery, variables);
-		//console.log(userData);
+		const userDataResponse = await window.fetch(endpoint, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				query: userQuery,
+				variables
+			}),
+		});
+		const userDataResponseData = await userDataResponse.json();
+		const userData: UserData = userDataResponseData.data;
+		console.log(userData);
 		const userImg: HTMLImageElement | null = document.querySelector(
 			".main-profile_img"
 		);
@@ -219,7 +227,20 @@ const mainFunc = async (login: string) => {
 			desc.innerHTML = userData.user.bio;
 		}
 
-		const repoData: RepositoriesData = await client.request(repoQuery, variables);
+		const repoDataResponse = await window.fetch(endpoint,{
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				query: repoQuery,
+				variables
+			}),
+		});
+		//
+		const repoDataResponseData = await repoDataResponse.json();
+		const repoData: RepositoriesData = repoDataResponseData.data;
 		const { repositories } = repoData.repositoryOwner;
 		console.log(repoData);
 		const noRepo = document.querySelector(".main-body-no-repo");
@@ -255,7 +276,7 @@ const index = async () =>{
 			const usernameInput: HTMLInputElement| null = document.querySelector('.username_input');
 			if(usernameInput && usernameInput.value){
 				console.log(usernameInput.value);
-				const userQuery = gql`
+				const userQuery = `
 					query searchUser($login: String!){
 						search(query: $login, type: USER) {
 					    userCount
@@ -265,8 +286,21 @@ const index = async () =>{
 				const variables = {
 					login: usernameInput.value.trim()
 				}
-				const userData: UserSearchData = await client.request(userQuery, variables);
-				console.log(userData);
+				//
+				const userDataResponse = await window.fetch(endpoint,{
+					method: 'POST',
+					headers: {
+						'Authorization': `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						query: userQuery,
+						variables
+					}),
+				});
+				const userDataResponseData = await userDataResponse.json();
+				const userData: UserSearchData = userDataResponseData.data;
+				console.log();
 				if(userData.search.userCount > 0){
 					await mainFunc(usernameInput.value);
 					setTimeout(async ()=>{
