@@ -275,7 +275,6 @@ const index = async () =>{
 			submitBtn.setAttribute('diabled', 'true');
 			const usernameInput: HTMLInputElement| null = document.querySelector('.username_input');
 			if(usernameInput && usernameInput.value){
-				console.log(usernameInput.value);
 				const userQuery = `
 					query searchUser($login: String!){
 						search(query: $login, type: USER) {
@@ -300,7 +299,6 @@ const index = async () =>{
 				});
 				const userDataResponseData = await userDataResponse.json();
 				const userData: UserSearchData = userDataResponseData.data;
-				console.log();
 				if(userData.search.userCount > 0){
 					await mainFunc(usernameInput.value);
 					setTimeout(async ()=>{
