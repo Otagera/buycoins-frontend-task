@@ -272,6 +272,7 @@ const index = async () =>{
 		const submitBtn = document.querySelector('.start_box-button');
 		submitBtn?.addEventListener('click', async ()=>{
 			submitBtn.classList.add('start_box-button-inactive');
+			submitBtn.innerHTML = 'Loading...';
 			submitBtn.setAttribute('diabled', 'true');
 			const usernameInput: HTMLInputElement| null = document.querySelector('.username_input');
 			if(usernameInput && usernameInput.value){
@@ -300,9 +301,8 @@ const index = async () =>{
 				const userDataResponseData = await userDataResponse.json();
 				const userData: UserSearchData = userDataResponseData.data;
 				if(userData.search.userCount > 0){
-					await mainFunc(usernameInput.value);
 					setTimeout(async ()=>{
-						await mainFunc('otagera');
+						await mainFunc(usernameInput.value);
 						const start = document.querySelector('.start');
 						if(start){
 							start.classList.add('hide');
