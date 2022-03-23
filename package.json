@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "assets": "^3.0.1",
-    "dotenv": "^7.0.0"
+    "dotenv": "^16.0.0"
   }
 }
